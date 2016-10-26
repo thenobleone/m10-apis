@@ -4,16 +4,29 @@
 # This is a perfect situation in which writing a function will allow you to better structure your
 # code, and give a name to a repeated task.
 library(jsonlite)
-setwd('~/Documents/info-201/m10-apis/exercise-2/')
+setwd('~/Desktop/Info 200/m10-apis/exercise-2/')
 
 
 # Write a function that allows you to specify an artist, and returns the top 10 tracks of that artist
-
+ArtistTopTen <- function (artist){
+  base <- 'https://api.spotify.com/v1/'
+  
+  artist.query <- paste0(base, 'search?', 'q=', artist, '&type=artist')
+  
+  artist.info <- fromJSON(artist.query)
+  artist.id <- artist.info$artists$items$id[1]
+  
+  top.track.query <- paste0(base, 'artists/', artist.id, '/top-tracks?country=US')
+  top.tracks <- fromJSON(top.track.query)
+  return(top.tracks$tracks)
+}
 
 
 # What are the top 10 tracks by Nelly?
+top.nelly <- ArtistTopTen('Nelly')
 
-
+# Save top_nelly
+save(top.nelly, file="nelly_tracks.Rdata")
 
 
 ### Bonus ### 
